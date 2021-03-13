@@ -1,0 +1,4 @@
+---
+profile_apache::create_default_vhost: true
+apache::default_vhost: false
+...

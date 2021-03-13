@@ -1,0 +1,4 @@
+---
+profile_apache::service_name: 'apache2'
+apache::service_restart: "apachectl configtest && systemctl reload apache2"
+...

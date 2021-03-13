@@ -1,0 +1,4 @@
+---
+profile_apache::service_name: 'httpd'
+apache::service_restart: "apachectl configtest && systemctl reload httpd"
+...
