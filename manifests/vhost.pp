@@ -14,6 +14,7 @@ define profile_apache::vhost (
   Boolean                   $manage_firewall_entry = true,
   Integer                   $priority              = 10,
   Boolean                   $manage_sd_service     = true,
+  String                    $sd_check_uri          = '',
   Array                     $sd_service_tags       = [],
   Optional[String]          $custom_fragment       = undef,
   String                    $service_name          = $::profile_apache::service_name,
@@ -72,12 +73,12 @@ define profile_apache::vhost (
   if $manage_sd_service {
     $_service_check = $ssl ? {
       true  => {
-        http            => "https://${servername}:${_real_port}",
+        http            => "https://${servername}:${_real_port}/${sd_check_uri}",
         interval        => '10s',
         tls_skip_verify => true,
       },
       false => {
-        http            => "http://${servername}:${_real_port}",
+        http            => "http://${servername}:${_real_port}/${sd_check_uri}",
         interval        => '10s',
       },
     }
