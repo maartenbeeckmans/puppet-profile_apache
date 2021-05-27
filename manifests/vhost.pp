@@ -14,6 +14,7 @@ define profile_apache::vhost (
   Boolean                   $manage_firewall_entry = true,
   Integer                   $priority              = 10,
   Boolean                   $manage_sd_service     = true,
+  Optional[String]          $sd_service_name       = undef,
   String                    $sd_check_uri          = '',
   Array                     $sd_service_tags       = [],
   Optional[String]          $custom_fragment       = undef,
@@ -71,6 +72,11 @@ define profile_apache::vhost (
   }
 
   if $manage_sd_service {
+    if $sd_service_name {
+      $_sd_service_name = $sd_service_name
+    } else {
+      $_sd_service_name = "${servername}_${_real_port}"
+    }
     $_service_check = $ssl ? {
       true  => {
         http            => "https://${servername}:${_real_port}/${sd_check_uri}",
@@ -82,7 +88,7 @@ define profile_apache::vhost (
         interval        => '10s',
       },
     }
-    consul::service { "${servername}_${_real_port}":
+    consul::service { $_sd_service_name:
       checks => [$_service_check],
       port   => $_real_port,
       tags   => $sd_service_tags,
