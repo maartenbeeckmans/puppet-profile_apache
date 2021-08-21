@@ -79,7 +79,7 @@ define profile_apache::vhost (
     if $sd_service_name {
       $_sd_service_name = $sd_service_name
     } else {
-      $_sd_service_name = "${servername}_${_real_port}"
+      $_sd_service_name = "${servername}-${_real_port}"
     }
     $_service_check = $ssl ? {
       true  => {
